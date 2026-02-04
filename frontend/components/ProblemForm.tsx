@@ -63,7 +63,7 @@ export default function ProblemForm() {
 
         <button
             type="submit"
-            className="w-full rounded-md bg-blue-600 py-2 text-white font-medium hover:bg-blue-700 transition"
+            className="w-full rounded-md bg-blue-600 py-2 shadow-md px-4 py-4 text-white font-medium hover:bg-blue-700 transition"
         >
             Ver orientação inicial
         </button>

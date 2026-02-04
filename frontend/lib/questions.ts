@@ -18,7 +18,7 @@ export const questions = [
   },
   {
     id: "urgency",
-    label: "Isso tem prazo ou urgência?",
+    label: "Possui prazo ou urgência?",
     type: "select",
     options: ["Não", "Sim, tenho prazo curto"],
   },
