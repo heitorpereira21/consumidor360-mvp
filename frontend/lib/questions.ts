@@ -13,7 +13,7 @@ export const questions = [
   },
   {
     id: "description",
-    label: "Explique brevemente o que aconteceu",
+    label: "Explique brevemente o que aconteceu.",
     type: "textarea",
   },
   {
