@@ -15,7 +15,7 @@ export default function ProblemForm() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (answers.area === "Consumidor") {
+    if (answers.area === "Consumidor"){
       setResult(
         "Você pode estar diante de uma relação de consumo. Guarde provas e procure orientação especializada."
       );

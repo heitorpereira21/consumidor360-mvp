@@ -3,7 +3,7 @@ export const questions = [
     id: "area",
     label: "Qual área melhor descreve seu problema?",
     type: "select",
-    options: [
+    options:[
       "Consumidor",
       "Trabalhista",
       "Família",
