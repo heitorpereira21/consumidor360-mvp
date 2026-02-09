@@ -8,16 +8,25 @@ export default function CadastroPage() {
   const [senha, setSenha] = useState("");
   const router = useRouter();
 
-  function handleCadastro(e) {
+  async function handleCadastro(e) {
     e.preventDefault();
 
-    localStorage.setItem(
-      "consumidor360_user",
-      JSON.stringify({ email })
-    );
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, senha }),
+    });
 
-    router.push("/dashboard");
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error);
+      return;
+    }
+
+    router.push("/login");
   }
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">

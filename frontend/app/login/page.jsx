@@ -8,16 +8,30 @@ export default function LoginPage() {
   const [senha, setSenha] = useState("");
   const router = useRouter();
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
 
+    const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        alert(data.error);
+        return;
+    }
+
     localStorage.setItem(
-      "consumidor360_user",
-      JSON.stringify({ email })
+        "consumidor360_user",
+        JSON.stringify(data.user)
     );
 
     router.push("/dashboard");
-  }
+    }
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
