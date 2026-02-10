@@ -28,7 +28,7 @@ Respostas do usuário:
 
 Forneça uma orientação em formato JSON com os campos:
 - titulo: Título da orientação (ex: "Direito do Consumidor")
-- texto: Texto explicativo com orientações práticas. Sempre termine o texto com: Link do PROCON: [PROCON](https://www.gov.br/procon/pt-br)
+- texto: Texto explicativo com orientações práticas. Sempre termine o texto com: Link do PROCON: (https://www.gov.br/procon/pt-br)
 - acao: Ação recomendada (sempre "Salvar caso")
 
 Mantenha o texto conciso, profissional e focado em direitos brasileiros.
