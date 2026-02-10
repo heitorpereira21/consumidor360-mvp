@@ -27,22 +27,52 @@ export default function ProblemForm() {
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    const orientacao = getOrientacao(answers);
+    try {
+      const response = await fetch('/api/orientacao', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ answers }),
+      });
 
-    localStorage.setItem(
-      "consumidor360_caso",
-      JSON.stringify({
-        answers,
-        orientacao,
-        createdAt: new Date().toISOString(),
-      })
-    );
+      if (!response.ok) {
+        throw new Error('Erro na API');
+      }
 
-    setResult(orientacao);
-    setShowForm(false);
+      const orientacao = await response.json();
+
+      localStorage.setItem(
+        "consumidor360_caso",
+        JSON.stringify({
+          answers,
+          orientacao,
+          createdAt: new Date().toISOString(),
+        })
+      );
+
+      setResult(orientacao);
+      setShowForm(false);
+    } catch (error) {
+      console.error('Erro ao obter orientação:', error);
+      // Fallback para orientação local se a API falhar
+      const orientacao = getOrientacao(answers);
+
+      localStorage.setItem(
+        "consumidor360_caso",
+        JSON.stringify({
+          answers,
+          orientacao,
+          createdAt: new Date().toISOString(),
+        })
+      );
+
+      setResult(orientacao);
+      setShowForm(false);
+    }
   }
 
   const currentQuestion = questions[currentStep];
