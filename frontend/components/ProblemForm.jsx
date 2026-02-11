@@ -31,12 +31,16 @@ export default function ProblemForm() {
     e.preventDefault();
 
     try {
+      const storedUser = localStorage.getItem("consumidor360_user");
+      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+      const userEmail = parsedUser?.email || null;
+
       const response = await fetch('/api/orientacao', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ answers }),
+        body: JSON.stringify({ answers, userEmail }),
       });
 
       if (!response.ok) {

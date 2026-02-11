@@ -1,4 +1,4 @@
-import { findUserByEmail } from "../../../lib/mongodb";
+import { findUserByEmail } from "../../../lib/db";
 import { verifyPassword } from "../../../lib/password";
 
 function normalizeEmail(email) {
@@ -14,30 +14,24 @@ export async function POST(req) {
     const senha = String(body?.senha || "").trim();
 
     if (!email || !senha) {
-      return Response.json(
-        { error: "Email e senha são obrigatórios" },
-        { status: 400 }
-      );
+      return Response.json({ error: "Email e senha são obrigatórios" }, { status: 400 });
     }
 
     const user = await findUserByEmail(email);
 
-    if (!user || !verifyPassword(senha, user.senhaHash)) {
+    if (!user || !verifyPassword(senha, user.passwordHash)) {
       return Response.json({ error: "Credenciais inválidas" }, { status: 401 });
     }
 
     return Response.json({
       message: "Login ok",
       user: {
-        id: user._id?.toString?.() || user._id,
+        id: user.id,
         email: user.email,
       },
     });
   } catch (error) {
     console.error("Erro no login:", error);
-    return Response.json(
-      { error: "Não foi possível realizar login" },
-      { status: 500 }
-    );
+    return Response.json({ error: "Não foi possível realizar login" }, { status: 500 });
   }
 }

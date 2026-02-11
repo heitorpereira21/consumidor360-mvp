@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  cases        Case[]
+}
+
+model Case {
+  id           String        @id @default(cuid())
+  area         String
+  description  String
+  urgency      String
+  createdAt    DateTime      @default(now())
+  userId       String?
+  user         User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  orientations Orientation[]
+
+  @@index([userId])
+}
+
+model Orientation {
+  id        String   @id @default(cuid())
+  title     String
+  text      String
+  action    String
+  model     String
+  createdAt DateTime @default(now())
+  caseId    String
+  case      Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+}
