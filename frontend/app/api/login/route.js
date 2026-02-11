@@ -1,19 +1,43 @@
-import { users } from "../../../lib/users";
+import { findUserByEmail } from "../../../lib/mongodb";
+import { verifyPassword } from "../../../lib/password";
+
+function normalizeEmail(email) {
+  return String(email || "")
+    .trim()
+    .toLowerCase();
+}
 
 export async function POST(req) {
-  const body = await req.json();
-  const { email, senha } = body;
+  try {
+    const body = await req.json();
+    const email = normalizeEmail(body?.email);
+    const senha = String(body?.senha || "").trim();
 
-  const user = users.find(
-    (u) => u.email === email && u.senha === senha
-  );
+    if (!email || !senha) {
+      return Response.json(
+        { error: "Email e senha são obrigatórios" },
+        { status: 400 }
+      );
+    }
 
-  if (!user) {
+    const user = await findUserByEmail(email);
+
+    if (!user || !verifyPassword(senha, user.senhaHash)) {
+      return Response.json({ error: "Credenciais inválidas" }, { status: 401 });
+    }
+
+    return Response.json({
+      message: "Login ok",
+      user: {
+        id: user._id?.toString?.() || user._id,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Erro no login:", error);
     return Response.json(
-      { error: "Credenciais inválidas" },
-      { status: 401 }
+      { error: "Não foi possível realizar login" },
+      { status: 500 }
     );
   }
-
-  return Response.json({ message: "Login ok", user });
 }
