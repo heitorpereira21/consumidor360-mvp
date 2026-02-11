@@ -4,6 +4,7 @@ import { useState } from "react";
 import ResultCard from "./ResultCard";
 import { questions } from "../lib/questions";
 import { getOrientacao } from "../lib/decision";
+import { getStoredUser, saveCaseForUser } from "../lib/session";
 
 export default function ProblemForm() {
   const [answers, setAnswers] = useState({});
@@ -30,10 +31,10 @@ export default function ProblemForm() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+    const storedUser = getStoredUser();
+    const userEmail = storedUser?.email || null;
+
     try {
-      const storedUser = localStorage.getItem("consumidor360_user");
-      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-      const userEmail = parsedUser?.email || null;
 
       const response = await fetch('/api/orientacao', {
         method: 'POST',
@@ -49,14 +50,18 @@ export default function ProblemForm() {
 
       const orientacao = await response.json();
 
-      localStorage.setItem(
-        "consumidor360_caso",
-        JSON.stringify({
-          answers,
-          orientacao,
-          createdAt: new Date().toISOString(),
-        })
-      );
+      const caso = {
+        id: crypto.randomUUID(),
+        answers,
+        orientacao,
+        createdAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem("consumidor360_caso", JSON.stringify(caso));
+
+      if (userEmail) {
+        saveCaseForUser(userEmail, caso);
+      }
 
       setResult(orientacao);
       setShowForm(false);
@@ -65,14 +70,18 @@ export default function ProblemForm() {
       // Fallback para orientação local se a API falhar
       const orientacao = getOrientacao(answers);
 
-      localStorage.setItem(
-        "consumidor360_caso",
-        JSON.stringify({
-          answers,
-          orientacao,
-          createdAt: new Date().toISOString(),
-        })
-      );
+      const caso = {
+        id: crypto.randomUUID(),
+        answers,
+        orientacao,
+        createdAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem("consumidor360_caso", JSON.stringify(caso));
+
+      if (userEmail) {
+        saveCaseForUser(userEmail, caso);
+      }
 
       setResult(orientacao);
       setShowForm(false);
@@ -185,7 +194,7 @@ export default function ProblemForm() {
         </div>
       )}
 
-      {result && <ResultCard result={result} cta="/login" />}
+      {result && <ResultCard result={result} cta={getStoredUser()?.email ? "/dashboard" : "/login"} />}
     </>
   );
 }

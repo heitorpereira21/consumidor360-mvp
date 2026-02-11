@@ -1,48 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getStoredUser, saveStoredUser } from "../../lib/session";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const router = useRouter();
 
+  useEffect(() => {
+    const user = getStoredUser();
+
+    if (user) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
+
   async function handleLogin(e) {
     e.preventDefault();
 
     const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, senha }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, senha }),
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-        alert(data.error);
-        return;
+      alert(data.error);
+      return;
     }
 
-    localStorage.setItem(
-        "consumidor360_user",
-        JSON.stringify(data.user)
-    );
-
+    saveStoredUser(data.user);
     router.push("/dashboard");
-    }
-
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-white rounded-lg border shadow-sm p-6">
-
-        <h1 className="text-xl font-semibold mb-6 text-gray-900">
-          Entrar na sua conta
-        </h1>
+        <h1 className="text-xl font-semibold mb-6 text-gray-900">Entrar na sua conta</h1>
 
         <form onSubmit={handleLogin} className="space-y-4">
-
           <input
             type="email"
             required
@@ -67,7 +67,6 @@ export default function LoginPage() {
           >
             Entrar
           </button>
-
         </form>
 
         <div className="mt-6 text-center text-gray-500 text-sm">
@@ -79,7 +78,6 @@ export default function LoginPage() {
             Criar conta
           </button>
         </div>
-
       </div>
     </div>
   );

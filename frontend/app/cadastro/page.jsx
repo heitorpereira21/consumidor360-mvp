@@ -1,12 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getStoredUser } from "../../lib/session";
 
 export default function CadastroPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    const user = getStoredUser();
+
+    if (user) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
 
   async function handleCadastro(e) {
     e.preventDefault();
@@ -27,17 +36,12 @@ export default function CadastroPage() {
     router.push("/login");
   }
 
-
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-white rounded-lg border shadow-sm p-6">
-
-        <h1 className="text-xl font-semibold mb-6 text-gray-900">
-          Criar conta
-        </h1>
+        <h1 className="text-xl font-semibold mb-6 text-gray-900">Criar conta</h1>
 
         <form onSubmit={handleCadastro} className="space-y-4">
-
           <input
             type="email"
             required
@@ -62,9 +66,7 @@ export default function CadastroPage() {
           >
             Criar conta
           </button>
-
         </form>
-
       </div>
     </div>
   );
