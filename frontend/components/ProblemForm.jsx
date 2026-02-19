@@ -95,41 +95,48 @@ export default function ProblemForm() {
     <>
       {showForm && (
         <div className="space-y-8">
-          <div className="flex justify-center items-center space-x-4" aria-label={stepLabel}>
-            <ol className="flex space-x-2" aria-hidden="true">
-              {questions.map((_, index) => (
-                <li
-                  key={index}
-                  aria-current={index === currentStep ? "step" : undefined}
-                  className={`w-4 h-4 rounded-full transition-all duration-300 ${
-                    index === currentStep
-                      ? "bg-blue-600 scale-110 shadow-lg"
-                      : index < currentStep
-                      ? "bg-blue-400"
-                      : "bg-gray-300"
-                  }`}
-                />
-              ))}
-            </ol>
-            <span className="text-sm text-gray-700 font-medium">{stepLabel}</span>
-          </div>
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 md:p-5">
+            <div className="flex items-center justify-between gap-4" aria-label={stepLabel}>
+              <ol className="flex space-x-2" aria-hidden="true">
+                {questions.map((_, index) => (
+                  <li
+                    key={index}
+                    aria-current={index === currentStep ? "step" : undefined}
+                    className={`h-3 w-3 rounded-full transition-all duration-300 md:h-4 md:w-4 ${
+                      index === currentStep
+                        ? "bg-blue-600 scale-110 shadow"
+                        : index < currentStep
+                        ? "bg-blue-400"
+                        : "bg-gray-300"
+                    }`}
+                  />
+                ))}
+              </ol>
+              <span className="text-xs font-semibold uppercase tracking-wide text-gray-700 md:text-sm">{stepLabel}</span>
+            </div>
 
-          <div className="text-center">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">{currentQuestion.label}</h2>
-            <p className="sr-only" aria-live="polite">
-              {stepLabel}
-            </p>
-            <div className="w-full bg-gray-200 rounded-full h-2" role="progressbar" aria-valuenow={currentStep + 1} aria-valuemin={1} aria-valuemax={questions.length} aria-label={stepLabel}>
+            <div className="mt-4">
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${((currentStep + 1) / questions.length) * 100}%` }}
-              />
+                className="h-2 w-full rounded-full bg-gray-200"
+                role="progressbar"
+                aria-valuenow={currentStep + 1}
+                aria-valuemin={1}
+                aria-valuemax={questions.length}
+                aria-label={stepLabel}
+              >
+                <div
+                  className="h-2 rounded-full bg-blue-600 transition-all duration-500 ease-out"
+                  style={{ width: `${((currentStep + 1) / questions.length) * 100}%` }}
+                />
+              </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-gray-200 bg-white p-5 md:p-6">
             <div className="space-y-3">
-              <label htmlFor={fieldId} className="block text-sm font-medium text-gray-800">
+              <h2 className="text-lg font-semibold text-gray-900">{currentQuestion.label}</h2>
+              <p className="text-sm text-gray-600">Responda com o máximo de clareza para melhorar a orientação.</p>
+              <label htmlFor={fieldId} className="sr-only">
                 {currentQuestion.label}
               </label>
 
@@ -138,7 +145,7 @@ export default function ProblemForm() {
                   id={fieldId}
                   required
                   value={answers[currentQuestion.id] || ""}
-                  className="w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all"
                   onChange={(e) => handleChange(currentQuestion.id, e.target.value)}
                 >
                   <option value="">Selecione uma opção</option>
@@ -153,22 +160,22 @@ export default function ProblemForm() {
               {currentQuestion.type === "textarea" && (
                 <textarea
                   id={fieldId}
-                  rows={5}
+                  rows={6}
                   required
                   value={answers[currentQuestion.id] || ""}
-                  placeholder="Digite sua resposta aqui..."
-                  className="w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all duration-200 shadow-sm hover:shadow-md resize-none"
+                  placeholder="Ex.: Comprei o produto em 10/01, solicitei troca em 15/01 e não tive retorno..."
+                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all resize-none"
                   onChange={(e) => handleChange(currentQuestion.id, e.target.value)}
                 />
               )}
             </div>
 
-            <div className="flex space-x-4 pt-4">
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row">
               {currentStep > 0 && (
                 <button
                   type="button"
                   onClick={prevStep}
-                  className="flex-1 rounded-lg bg-gray-100 px-6 py-3 text-gray-800 font-medium hover:bg-gray-200 transition-all duration-200 shadow-sm hover:shadow-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
+                  className="flex-1 rounded-xl border border-gray-300 bg-white px-6 py-3 text-gray-800 font-medium hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
                 >
                   ← Anterior
                 </button>
@@ -179,17 +186,17 @@ export default function ProblemForm() {
                   type="button"
                   onClick={nextStep}
                   disabled={!answers[currentQuestion.id]}
-                  className="flex-1 rounded-lg bg-blue-600 px-6 py-3 text-white font-medium hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600 disabled:hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
+                  className="flex-1 rounded-xl bg-blue-600 px-6 py-3 text-white font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
                 >
-                  Próximo →
+                  Continuar →
                 </button>
               ) : (
                 <button
                   type="submit"
                   disabled={!answers[currentQuestion.id]}
-                  className="flex-1 rounded-lg bg-green-600 px-6 py-3 text-white font-medium hover:bg-green-700 transition-all duration-200 shadow-sm hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green-600 disabled:hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700"
+                  className="flex-1 rounded-xl bg-emerald-600 px-6 py-3 text-white font-semibold hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-700"
                 >
-                  Ver orientação inicial
+                  Gerar orientação inicial
                 </button>
               )}
             </div>

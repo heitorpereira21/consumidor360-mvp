@@ -17,94 +17,91 @@ export default function Header() {
 
   function handleLogout() {
     localStorage.removeItem("consumidor360_user");
+    setOpen(false);
     router.push("/login");
   }
 
   return (
     <>
-      <header className="bg-white shadow-sm px-4 py-3 flex items-center justify-between relative">
-        <button
-          onClick={() => setOpen(!open)}
-          className="text-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded px-2"
-          aria-expanded={open}
-          aria-controls="menu-principal"
-          aria-label="Abrir menu principal"
-          type="button"
-        >
-          ☰
-        </button>
-
-        <button
-          type="button"
-          aria-label="Ir para página inicial"
-          onClick={() => router.push("/")}
-          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 rounded"
-        >
-          <img
-            src="/logo.png"
-            alt="Consumidor 360"
-            className="h-8 object-contain"
-          />
-        </button>
-
-        {user ? (
+      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/90 px-4 py-3 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
           <button
-            onClick={handleLogout}
-            className="text-sm text-blue-700 hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 rounded"
+            onClick={() => setOpen(!open)}
+            className="rounded-lg px-2 py-1 text-xl text-gray-900 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            aria-expanded={open}
+            aria-controls="menu-principal"
+            aria-label="Abrir menu principal"
             type="button"
           >
-            Sair
+            ☰
           </button>
-        ) : (
+
           <button
-            onClick={() => router.push("/login")}
-            className="text-sm text-blue-700 hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 rounded"
             type="button"
+            aria-label="Ir para página inicial"
+            onClick={() => router.push("/")}
+            className="rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
           >
-            Entrar
+            <img
+              src="/logo.png"
+              alt="Consumidor 360"
+              className="h-8 object-contain"
+            />
           </button>
-        )}
+
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
+              type="button"
+            >
+              Sair
+            </button>
+          ) : (
+            <button
+              onClick={() => router.push("/login")}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
+              type="button"
+            >
+              Entrar
+            </button>
+          )}
+        </div>
       </header>
 
       {open && (
-        <nav
-          id="menu-principal"
-          className="absolute top-14 left-0 w-64 bg-white shadow-lg border p-4 space-y-4 z-50"
-          aria-label="Menu lateral"
-        >
+        <>
           <button
-            onClick={() => {
-              router.push("/dashboard");
-              setOpen(false);
-            }}
-            className="block w-full text-left text-gray-900 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded"
             type="button"
-          >
-            Minha Área
-          </button>
+            aria-label="Fechar menu"
+            className="fixed inset-0 z-40 bg-black/30"
+            onClick={() => setOpen(false)}
+          />
 
-          <button
-            onClick={() => {
-              router.push("/orientacao");
-              setOpen(false);
-            }}
-            className="block w-full text-left text-gray-900 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded"
-            type="button"
+          <nav
+            id="menu-principal"
+            className="fixed left-4 top-20 z-50 w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-gray-200 bg-white p-4 shadow-xl"
+            aria-label="Menu lateral"
           >
-            Novo Caso
-          </button>
+            <div className="mb-3 border-b border-gray-100 pb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Navegação
+            </div>
 
-          <button
-            onClick={() => {
-              router.push("/embaixadores");
-              setOpen(false);
-            }}
-            className="block w-full text-left text-gray-900 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded"
-            type="button"
-          >
-            Embaixadores
-          </button>
-        </nav>
+            {[ ["Minha Área", "/dashboard"], ["Novo Caso", "/orientacao"], ["Embaixadores", "/embaixadores"] ].map(([label, path]) => (
+              <button
+                key={label}
+                onClick={() => {
+                  router.push(path);
+                  setOpen(false);
+                }}
+                className="mb-2 block w-full rounded-xl px-3 py-2 text-left text-gray-900 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                type="button"
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+        </>
       )}
     </>
   );
