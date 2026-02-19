@@ -27,44 +27,74 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="mx-auto max-w-3xl space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Minha Área</h1>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8">
+      <div className="mx-auto w-full max-w-5xl space-y-6 px-4">
+        <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-semibold text-gray-900 md:text-3xl">Minha Área</h1>
+              <p className="mt-1 text-sm text-gray-600">Acompanhe seus casos e próximos passos.</p>
+            </div>
 
-          <button onClick={handleLogout} className="text-sm text-blue-600 hover:underline">
-            Sair
-          </button>
-        </div>
-
-        {user && (
-          <div className="bg-white rounded-lg border shadow-sm p-4">
-            <p className="text-sm text-gray-600">Logado como:</p>
-            <p className="font-medium text-gray-900">{user.email}</p>
+            <button
+              onClick={handleLogout}
+              className="rounded-xl border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
+              type="button"
+            >
+              Sair
+            </button>
           </div>
-        )}
 
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900">Meus Casos</h2>
+          {user && (
+            <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50/70 p-4">
+              <p className="text-xs uppercase tracking-wide text-blue-700">Conta conectada</p>
+              <p className="mt-1 font-medium text-gray-900">{user.email}</p>
+            </div>
+          )}
+        </section>
+
+        <section className="space-y-4" aria-labelledby="meus-casos-titulo">
+          <div className="flex items-center justify-between">
+            <h2 id="meus-casos-titulo" className="text-lg font-semibold text-gray-900">
+              Meus Casos
+            </h2>
+            <button
+              onClick={() => router.push("/orientacao")}
+              className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
+              type="button"
+            >
+              Novo caso
+            </button>
+          </div>
 
           {casos.length === 0 ? (
-            <div className="bg-white rounded-lg border shadow-sm p-4 text-gray-600">
-              Você ainda não salvou nenhum caso.
+            <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center shadow-sm">
+              <p className="text-gray-700">Você ainda não salvou nenhum caso.</p>
+              <p className="mt-2 text-sm text-gray-500">
+                Comece uma nova orientação para ver seu histórico aqui.
+              </p>
             </div>
           ) : (
-            casos.map((caso, index) => (
-              <div key={caso.id || index} className="bg-white rounded-lg border shadow-sm p-4 space-y-2">
-                <h3 className="font-medium text-gray-900">{caso.orientacao?.titulo}</h3>
+            <div className="grid gap-4">
+              {casos.map((caso, index) => (
+                <article
+                  key={caso.id || index}
+                  className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-base font-semibold text-gray-900">{caso.orientacao?.titulo}</h3>
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                      {new Date(caso.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
 
-                <p className="text-sm text-gray-600">Área: {caso.answers?.area}</p>
-
-                <p className="text-sm text-gray-600">{caso.orientacao?.texto}</p>
-
-                <p className="text-xs text-gray-400">{new Date(caso.createdAt).toLocaleString()}</p>
-              </div>
-            ))
+                  <p className="mt-3 text-sm font-medium text-blue-700">Área: {caso.answers?.area}</p>
+                  <p className="mt-2 text-sm leading-6 text-gray-700">{caso.orientacao?.texto}</p>
+                </article>
+              ))}
+            </div>
           )}
-        </div>
+        </section>
       </div>
     </div>
   );
