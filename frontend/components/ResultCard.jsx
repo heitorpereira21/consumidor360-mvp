@@ -1,6 +1,8 @@
 export default function ResultCard({ result, cta }) {
   if (!result) return null;
 
+  const proconUrl = "https://www.gov.br/mj/pt-br/assuntos/seus-direitos/consumidor";
+
   return (
     <div className="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
       <h3 className="text-base font-semibold text-gray-900">
@@ -23,6 +25,15 @@ export default function ResultCard({ result, cta }) {
           {result.acao}
         </button>
       )}
+
+      <a
+        href={proconUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-3 inline-block w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-center text-blue-700 hover:bg-blue-50 transition"
+      >
+        Acessar site do PROCON
+      </a>
     </div>
   );
 }
