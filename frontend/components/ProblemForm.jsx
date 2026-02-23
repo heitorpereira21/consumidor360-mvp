@@ -200,6 +200,17 @@ export default function ProblemForm() {
                 </button>
               )}
             </div>
+
+            <div className="pt-1 text-center">
+              <a
+                href="https://www.procon.sp.gov.br/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-6 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-100 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
+              >
+                Acessar site do Procon
+              </a>
+            </div>
           </form>
         </div>
       )}
